@@ -30,7 +30,7 @@ export default function Info() {
   )
 
   const image = (
-    <Image src="/avatar.png" alt="@pedronauck" width={size} height={size} />
+    <img src="/avatar.png" alt="@pedronauck" width={size} height={size} />
   )
 
   return (
