@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+@font-face {
+  font-family: 'Gilroy';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Gilroy-Regular'), url(/fonts/Gilroy-Regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  font-style: bold;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Gilroy-Bold'), url(/fonts/Gilroy-Bold.woff2) format('woff2');
+}
+
+h1,
+h2,
+h3 {
+  font-family: Gilroy, Inter, sans-serif;
+}
