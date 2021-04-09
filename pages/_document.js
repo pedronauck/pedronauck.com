@@ -97,6 +97,10 @@ export default class Document extends NextDocument {
           <meta property="og:image:width" content="1024" />
           <meta property="og:image:height" content="512" />
           <meta property="og:type" content="website" />
+          <meta
+            name="facebook-domain-verification"
+            content="0udr413u3k5n26go3icqr7wesq7m1o"
+          />
         </Head>
         <body>
           <GTMScriptBody />
