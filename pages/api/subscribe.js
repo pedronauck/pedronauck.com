@@ -9,8 +9,9 @@ const addContact = async (contact) => {
   return await ac.contacts.contact.create({ contact })
 }
 
+const listId = process.env.NODE_ENV !== 'production' ? 3 : 1
 const addContactToList = async (id) => {
-  const body = { contactList: { contact: id, list: 1, status: 1 } }
+  const body = { contactList: { contact: id, list: listId, status: 1 } }
   return await ac.contacts.contact.updateListStatus(body)
 }
 
@@ -18,7 +19,10 @@ export default async function handler(req, res) {
   try {
     const { data } = await addContact(req.body)
     await addContactToList(parseInt(data.contact.id))
-    res.status(200).json({ message: 'Contact added successfully' })
+    res.status(200).json({
+      message: 'Contact added successfully',
+      contact: req.body,
+    })
   } catch (err) {
     console.log(err)
     res

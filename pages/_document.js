@@ -12,7 +12,6 @@ export default class Document extends NextDocument {
         <Head>
           <GTMScriptHead />
           <SegmentTag />
-          <title>Pedro Nauck</title>
           <link
             rel="apple-touch-icon"
             sizes="57x57"

@@ -1,52 +1,68 @@
 import Image from 'next/image'
 import { useRef } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm, FormProvider, Controller } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { FiUser, FiMail } from 'react-icons/fi'
 import { Button, useToast } from '@chakra-ui/react'
+import { yupResolver } from '@hookform/resolvers/yup'
 import mergeRefs from 'react-merge-refs'
 import axios from 'axios'
 import * as yup from 'yup'
 
 import Input from 'components/Input'
+import useAnalytics from 'hooks/useAnalytics'
 
 const schema = yup.object().shape({
-  email: yup.string().email().label('Email').required(),
-  firstName: yup.string().label('Name').required(),
+  email: yup.string().email().required('Email é obrigatório'),
+  firstName: yup.string().required('Nome é obrigatório'),
 })
 
 export default function Content() {
   const toast = useToast()
+  const seg = useAnalytics()
   const emailRef = useRef(null)
-  const { control, handleSubmit, formState, reset, watch } = useForm({
-    resolver: yupResolver(schema),
-  })
+  const form = useForm({ resolver: yupResolver(schema) })
+  const { control, handleSubmit, watch, reset } = form
 
   const subscribe = useMutation(
-    async (contact) => await axios.post('/api/subscribe', contact),
+    async (contact) => {
+      return axios.post('/api/subscribe', contact)
+    },
     {
-      onSuccess: () => {
+      onSuccess: ({ data: { contact } }) => {
         toast({
           position: 'top',
           isClosable: true,
           status: 'success',
           title: 'Email cadastrado com sucesso!',
         })
-        reset()
+        seg.track('subscription_added', contact)
+        reset({ firstName: '', email: '' })
       },
       onError: () => {
+        const firstName = watch('firstName')
+        const email = watch('email')
+        seg.track('subscription_error', {
+          firstName,
+          email,
+        })
         toast({
           position: 'top',
           isClosable: true,
           status: 'error',
           title: 'Oops, esse email já foi cadastro!',
         })
-        reset({ firstName: watch('firstName') })
+        reset({ firstName })
         emailRef.current.focus()
       },
     }
   )
+
+  const onSubmit = async (values) => {
+    emailRef.current.blur()
+    seg.track('form_submitted', values)
+    subscribe.mutate(values)
+  }
 
   return (
     <div className="grid p-5 gap-5 sm:gap-0 sm:p-10 sm:h-screen sm:grid-rows-3">
@@ -62,51 +78,54 @@ export default function Content() {
         <h2 className="text-6xl">Quarta</h2>
         <h3 className="text-6xl font-bold text-secondary">às 19h30</h3>
       </div>
-      <form onSubmit={handleSubmit(subscribe.mutate)}>
-        <h3>Se inscreva, vagas limitadas!</h3>
-        <div className="mt-3">
-          <Controller
-            name="firstName"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                icon={<FiUser />}
-                error={formState.errors.firstName}
-                type="text"
-                placeholder="Seu nome"
-              />
-            )}
-          />
-        </div>
-        <div className="mt-3">
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => {
-              return (
-                <Input
-                  {...field}
-                  ref={mergeRefs([emailRef, field.ref])}
-                  icon={<FiMail />}
-                  error={formState.errors.email}
-                  type="email"
-                  name="email"
-                  placeholder="Seu email"
-                />
-              )
-            }}
-          />
-        </div>
-        <Button
-          type="submit"
-          className="mt-4"
-          variant="default"
-          isFullWidth
-          isLoading={subscribe.isLoading}>
-          Se inscrever
-        </Button>
-      </form>
+      <FormProvider {...form}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <h3>Se inscreva, vagas limitadas!</h3>
+          <div className="mt-3">
+            <Controller
+              name="firstName"
+              defaultValue=""
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Input
+                    {...field}
+                    type="text"
+                    placeholder="Seu nome"
+                    icon={<FiUser />}
+                  />
+                )
+              }}
+            />
+          </div>
+          <div className="mt-3">
+            <Controller
+              name="email"
+              defaultValue=""
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Input
+                    {...field}
+                    type="email"
+                    placeholder="Seu email"
+                    ref={mergeRefs([emailRef, field.ref])}
+                    icon={<FiMail />}
+                  />
+                )
+              }}
+            />
+          </div>
+          <Button
+            type="submit"
+            className="mt-4"
+            variant="default"
+            isFullWidth
+            isLoading={subscribe.isLoading}>
+            Se inscrever
+          </Button>
+        </form>
+      </FormProvider>
     </div>
   )
 }
