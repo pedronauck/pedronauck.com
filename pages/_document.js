@@ -2,7 +2,11 @@ import { ColorModeScript } from '@chakra-ui/react'
 import NextDocument, { Html, Head, Main, NextScript } from 'next/document'
 
 import theme from 'styles/theme'
-import { GTMScriptHead, GTMScriptBody, SegmentTag } from 'components/ScriptTags'
+import {
+  GTMScriptHead,
+  GTMScriptBody,
+  FreshpaintTag,
+} from 'components/ScriptTags'
 
 export default class Document extends NextDocument {
   render() {
@@ -11,6 +15,7 @@ export default class Document extends NextDocument {
         <Head>
           <GTMScriptHead />
           <SegmentTag />
+          <FreshpaintTag />
           <link
             rel="apple-touch-icon"
             sizes="57x57"
