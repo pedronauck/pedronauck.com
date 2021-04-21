@@ -1,9 +1,8 @@
 import { ColorModeScript } from '@chakra-ui/react'
 import NextDocument, { Html, Head, Main, NextScript } from 'next/document'
 
-import { GTMScriptHead, GTMScriptBody } from 'components/GTMScript'
-import SegmentTag from 'components/SegmentTag'
 import theme from 'styles/theme'
+import { GTMScriptHead, GTMScriptBody, SegmentTag } from 'components/ScriptTags'
 
 export default class Document extends NextDocument {
   render() {
