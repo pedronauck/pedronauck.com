@@ -14,7 +14,7 @@ export default class Document extends NextDocument {
       <Html lang="en">
         <Head>
           <GTMScriptHead />
-          <SegmentTag />
+          <FreshpaintTag />
           <FreshpaintTag />
           <link
             rel="apple-touch-icon"
