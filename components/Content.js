@@ -75,12 +75,12 @@ export default function Content() {
         />
       </div>
       <div className="flex flex-col flex-start justify-center">
-        <h2 className="text-6xl">Quarta</h2>
-        <h3 className="text-6xl font-bold text-secondary">às 19h30</h3>
+        <h2 className="text-6xl">Em breve</h2>
+        <h3 className="text-6xl font-bold text-secondary">Novidades</h3>
       </div>
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h3>Se inscreva, vagas limitadas!</h3>
+          <h3>Se inscreva e fique por dentro!</h3>
           <div className="mt-3">
             <Controller
               name="firstName"
