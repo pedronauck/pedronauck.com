@@ -50,7 +50,7 @@ export default function Content() {
           position: 'top',
           isClosable: true,
           status: 'error',
-          title: 'Oops, esse email já foi cadastro!',
+          title: 'Oops, esse email já foi cadastrado!',
         })
         reset({ firstName })
         emailRef.current.focus()
